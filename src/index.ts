@@ -38,7 +38,6 @@ class SkyQAccessory {
     this.tvService = new Service.Television(this.name, "Television");
 
     this.tvService.setCharacteristic(Characteristic.ConfiguredName, this.name);
-    this.tvService.setCharacteristic(Characteristic.Manufacturer, "Sky Q");
 
     this.tvService.setCharacteristic(
       Characteristic.SleepDiscoveryMode,
@@ -76,7 +75,7 @@ class SkyQAccessory {
         Characteristic.IsConfigured,
         Characteristic.IsConfigured.CONFIGURED
       )
-      .setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.APPLICATION);
+      .setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.HOME_SCREEN);
 
     this.tvService.addLinkedService(this.inputSkyQService);
     this.enabledServices.push(this.inputSkyQService);
@@ -98,27 +97,47 @@ class SkyQAccessory {
       callback(null, isOn);
     });    
   }
-  setRemoteKey(newValue, callback) {
-    console.log("input", newValue);
-    callback(null);
-  }
-
-  createInputSource(
-    id,
-    name,
-    number,
-    type = Characteristic.InputSourceType.HDMI
-  ) {
-    var input = new Service.InputSource(id, name);
-    input
-      .setCharacteristic(Characteristic.Identifier, number)
-      .setCharacteristic(Characteristic.ConfiguredName, name)
-      .setCharacteristic(
-        Characteristic.IsConfigured,
-        Characteristic.IsConfigured.CONFIGURED
-      )
-      .setCharacteristic(Characteristic.InputSourceType, type);
-    return input;
+  setRemoteKey(state, callback) {
+    console.log("input", state);
+    var platform = this;
+    platform.log("Setting key state...");
+    var input_key;
+    switch (state)
+    {
+      case Characteristic.RemoteKey.ARROW_UP:
+        input_key = 'up';
+        break;
+      case Characteristic.RemoteKey.ARROW_DOWN:
+        input_key = 'down';
+        break;
+      case Characteristic.RemoteKey.ARROW_LEFT:
+        input_key = 'left';
+        break;
+      case Characteristic.RemoteKey.ARROW_RIGHT:
+        input_key = 'right';
+        break;
+      case Characteristic.RemoteKey.SELECT:
+        input_key = 'select';
+        break;
+      case Characteristic.RemoteKey.EXIT:
+        input_key = 'dismiss';
+        break;
+      case Characteristic.RemoteKey.BACK:
+        input_key = 'backup';
+        break;
+      case Characteristic.RemoteKey.PLAY_PAUSE:
+        input_key = 'play';
+        break;
+      case Characteristic.RemoteKey.INFORMATION:
+        input_key = 'i';
+        break;
+    }
+    if(input_key)
+    {
+      this.remoteControl.press(input_key, (err)=>{
+        callback();
+      });
+    } 
   }
 
   public getServices() {

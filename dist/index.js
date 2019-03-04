@@ -87,7 +87,6 @@ function () {
     this.isOn = false;
     this.tvService = new Service.Television(this.name, "Television");
     this.tvService.setCharacteristic(Characteristic.ConfiguredName, this.name);
-    this.tvService.setCharacteristic(Characteristic.Manufacturer, "Sky Q");
     this.tvService.setCharacteristic(Characteristic.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
     this.tvService.getCharacteristic(Characteristic.Active).on("set", this.setPowerState.bind(this)).on("get", this.getPowerState.bind(this));
     this.tvService.getCharacteristic(Characteristic.RemoteKey).on("set", this.setRemoteKey);
@@ -99,7 +98,7 @@ function () {
 
     this.tvService.getCharacteristic(Characteristic.ActiveIdentifier).on("set", this.setRemoteKey);
     this.inputSkyQService = new Service.InputSource("skyq", "Sky Q");
-    this.inputSkyQService.setCharacteristic(Characteristic.Identifier, 0).setCharacteristic(Characteristic.ConfiguredName, "Sky Q").setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED).setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.APPLICATION);
+    this.inputSkyQService.setCharacteristic(Characteristic.Identifier, 0).setCharacteristic(Characteristic.ConfiguredName, "Sky Q").setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED).setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.HOME_SCREEN);
     this.tvService.addLinkedService(this.inputSkyQService);
     this.enabledServices.push(this.inputSkyQService);
     this.enabledServices.push(this.tvService);
@@ -123,17 +122,55 @@ function () {
     }
   }, {
     key: "setRemoteKey",
-    value: function setRemoteKey(newValue, callback) {
-      console.log("input", newValue);
-      callback(null);
-    }
-  }, {
-    key: "createInputSource",
-    value: function createInputSource(id, name, number) {
-      var type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Characteristic.InputSourceType.HDMI;
-      var input = new Service.InputSource(id, name);
-      input.setCharacteristic(Characteristic.Identifier, number).setCharacteristic(Characteristic.ConfiguredName, name).setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED).setCharacteristic(Characteristic.InputSourceType, type);
-      return input;
+    value: function setRemoteKey(state, callback) {
+      console.log("input", state);
+      var platform = this;
+      platform.log("Setting key state...");
+      var input_key;
+
+      switch (state) {
+        case Characteristic.RemoteKey.ARROW_UP:
+          input_key = 'up';
+          break;
+
+        case Characteristic.RemoteKey.ARROW_DOWN:
+          input_key = 'down';
+          break;
+
+        case Characteristic.RemoteKey.ARROW_LEFT:
+          input_key = 'left';
+          break;
+
+        case Characteristic.RemoteKey.ARROW_RIGHT:
+          input_key = 'right';
+          break;
+
+        case Characteristic.RemoteKey.SELECT:
+          input_key = 'select';
+          break;
+
+        case Characteristic.RemoteKey.EXIT:
+          input_key = 'dismiss';
+          break;
+
+        case Characteristic.RemoteKey.BACK:
+          input_key = 'backup';
+          break;
+
+        case Characteristic.RemoteKey.PLAY_PAUSE:
+          input_key = 'play';
+          break;
+
+        case Characteristic.RemoteKey.INFORMATION:
+          input_key = 'i';
+          break;
+      }
+
+      if (input_key) {
+        this.remoteControl.press(input_key, function (err) {
+          callback();
+        });
+      }
     }
   }, {
     key: "getServices",
