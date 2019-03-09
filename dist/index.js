@@ -89,14 +89,17 @@ function () {
     this.tvService.setCharacteristic(Characteristic.ConfiguredName, this.name);
     this.tvService.setCharacteristic(Characteristic.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
     this.tvService.getCharacteristic(Characteristic.Active).on("set", this.setPowerState.bind(this)).on("get", this.getPowerState.bind(this));
-    this.tvService.getCharacteristic(Characteristic.RemoteKey).on("set", this.setRemoteKey);
+    this.tvService.getCharacteristic(Characteristic.RemoteKey).on("set", this.setRemoteKey.bind(this));
     this.tvService.getCharacteristic(Characteristic.PowerModeSelection).on('set', function (newValue, callback) {
       _this.log.debug('SkyQ - requested tv settings (PowerModeSelection): ' + newValue);
 
       console.log('SkyQ - requested tv settings (PowerModeSelection): ' + newValue);
+      callback();
     }); //this.tvService.setCharacteristic(Characteristic.ActiveIdentifier, 0);
+    //this.tvService
+    //  .getCharacteristic(Characteristic.ActiveIdentifier)
+    //  .on("set", this.setRemoteKey.bind(this));
 
-    this.tvService.getCharacteristic(Characteristic.ActiveIdentifier).on("set", this.setRemoteKey);
     this.inputSkyQService = new Service.InputSource("skyq", "Sky Q");
     this.inputSkyQService.setCharacteristic(Characteristic.Identifier, 0).setCharacteristic(Characteristic.ConfiguredName, "Sky Q").setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED).setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.HOME_SCREEN);
     this.tvService.addLinkedService(this.inputSkyQService);
@@ -124,8 +127,7 @@ function () {
     key: "setRemoteKey",
     value: function setRemoteKey(state, callback) {
       console.log("input", state);
-      var platform = this;
-      platform.log("Setting key state...");
+      console.log("Setting key state...");
       var input_key;
 
       switch (state) {
@@ -176,6 +178,16 @@ function () {
     key: "getServices",
     value: function getServices() {
       return this.enabledServices;
+    }
+  }, {
+    key: "getManufacturer",
+    value: function getManufacturer() {
+      return 'Sky';
+    }
+  }, {
+    key: "getModel",
+    value: function getModel() {
+      return 'Sky Q';
     }
   }]);
 
