@@ -47,7 +47,7 @@ var Service, Characteristic;
 function index (homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("homebridge-sky-q-dev", "sky-q-dev", SkyQAccessory);
+  homebridge.registerAccessory("homebridge-sky-q-experimental", "sky-q-experimental", SkyQAccessory);
 }
 
 var SkyQAccessory =
@@ -95,11 +95,7 @@ function () {
 
       console.log('SkyQ - requested tv settings (PowerModeSelection): ' + newValue);
       callback();
-    }); //this.tvService.setCharacteristic(Characteristic.ActiveIdentifier, 0);
-    //this.tvService
-    //  .getCharacteristic(Characteristic.ActiveIdentifier)
-    //  .on("set", this.setRemoteKey.bind(this));
-
+    });
     this.inputSkyQService = new Service.InputSource("skyq", "Sky Q");
     this.inputSkyQService.setCharacteristic(Characteristic.Identifier, 0).setCharacteristic(Characteristic.ConfiguredName, "Sky Q").setCharacteristic(Characteristic.IsConfigured, Characteristic.IsConfigured.CONFIGURED).setCharacteristic(Characteristic.InputSourceType, Characteristic.InputSourceType.HOME_SCREEN);
     this.tvService.addLinkedService(this.inputSkyQService);
