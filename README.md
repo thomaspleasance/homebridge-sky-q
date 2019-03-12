@@ -3,7 +3,7 @@ Sky Q homebridge plugin for iOS 12.2
 
 # Installation
 
-npm install -g https://github.com/thomaspleasance/homebridge-sky-q.git
+npm install -g homebridge-sky-q-experimental
 
 # Configuration
 
