@@ -1,14 +1,14 @@
 {
   "name": "homebridge-sky-q-experimental",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Homebridge plugin for Sky Q.",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/thomaspleasance/homebridge-sky-q.git"
+    "type": "git",
+    "url": "https://github.com/thomaspleasance/homebridge-sky-q.git"
   },
   "scripts": {
     "dev": "rollup -c -w",
@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "sky-remote": "^1.1.0",
+    "sky-remote": "^1.2.0",
     "sky-q": "^1.0.2"
   },
   "engines": {

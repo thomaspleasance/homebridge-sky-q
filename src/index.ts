@@ -1,5 +1,6 @@
 require("@babel/polyfill");
 const SkyQ = require('sky-q');
+
 const SkyRemote = require('sky-remote');
 
 let Service: any, Characteristic: any;
@@ -79,14 +80,14 @@ class SkyQAccessory {
   }
   
   setPowerState(state, callback) {
-    this.log.debug("state", state);
+    console.log("state", state);
     this.remoteControl.press('power', (err)=>{
       callback();
     });
   }
 
   getPowerState(callback) {
-    this.log.debug("state", "get");
+    console.log("state", "get");
     this.box.getPowerState().then(isOn=>{
       callback(null, isOn);
     });    

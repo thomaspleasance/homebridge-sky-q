@@ -41,6 +41,8 @@ require("@babel/polyfill");
 
 var SkyQ = require('sky-q');
 
+var SkyQApi = require('SkyQApi');
+
 var SkyRemote = require('sky-remote');
 
 var Service, Characteristic;
