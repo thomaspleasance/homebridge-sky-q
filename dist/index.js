@@ -41,8 +41,6 @@ require("@babel/polyfill");
 
 var SkyQ = require('sky-q');
 
-var SkyQApi = require('SkyQApi');
-
 var SkyRemote = require('sky-remote');
 
 var Service, Characteristic;
@@ -108,15 +106,22 @@ function () {
   _createClass(SkyQAccessory, [{
     key: "setPowerState",
     value: function setPowerState(state, callback) {
-      this.log.debug("state", state);
-      this.remoteControl.press('power', function (err) {
-        callback();
+      var _this2 = this;
+
+      this.box.getPowerState().then(function (isOn) {
+        if (isOn != state) {
+          _this2.remoteControl.press('power', function (err) {
+            callback();
+          });
+        } else {
+          callback();
+        }
       });
     }
   }, {
     key: "getPowerState",
     value: function getPowerState(callback) {
-      this.log.debug("state", "get");
+      console.log("state", "get");
       this.box.getPowerState().then(function (isOn) {
         callback(null, isOn);
       });

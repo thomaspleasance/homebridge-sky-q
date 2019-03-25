@@ -1,6 +1,6 @@
 {
   "name": "homebridge-sky-q-experimental",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Homebridge plugin for Sky Q.",
   "main": "dist/index.js",
   "files": [

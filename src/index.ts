@@ -79,11 +79,19 @@ class SkyQAccessory {
     this.enabledServices.push(this.tvService);
   }
   
-  setPowerState(state, callback) {
-    console.log("state", state);
-    this.remoteControl.press('power', (err)=>{
-      callback();
-    });
+  setPowerState(state: boolean, callback:Function) {
+    this.box.getPowerState().then(isOn=>{
+      if(isOn != state)
+      {
+        this.remoteControl.press('power', (err)=>{
+          callback();
+        });
+      }
+      else
+      {
+        callback();
+      }
+    });        
   }
 
   getPowerState(callback) {
